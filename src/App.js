@@ -15,7 +15,7 @@ function App() {
 var todoList = [
   {
     id: 1,
-    title: "Complete"
+    title: "Open"
   },
   {
     id: 2,
@@ -23,8 +23,8 @@ var todoList = [
   },
 
   {
-    id: 1,
-    title: "Open"
+    id: 3,
+    title: "Complete"
   }];
 
 
