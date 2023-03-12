@@ -1,16 +1,5 @@
 import React from 'react';
 
-function App() {
-  return (
-    <div>
-      <h1>Todo List</h1>
-      <ul>
-        {showList()}
-      </ul>
-    </div>
-  );
-}
-
 
 var todoList = [
   {
@@ -27,11 +16,29 @@ var todoList = [
     title: "Complete"
   }];
 
-
-function showList() {
+function ShowList() {
   return todoList.map(i => {
     return (<li key={i.id}>{i.title}</li>)
   })
 }
+
+
+
+
+function App() {
+  return (
+    <div>
+      <h1>Todo List</h1>
+      <ul>
+        {ShowList()}
+       </ul>
+    </div>
+  );
+}
+
+
+
+
+
 
 export default App;
