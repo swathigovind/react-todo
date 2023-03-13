@@ -4,16 +4,16 @@ import React from 'react';
 var todoList = [
   {
     id: 1,
-    title: "Open"
+    title: "Start Assignment"
   },
   {
     id: 2,
-    title: "In Progress"
+    title: "Assignment In Progress"
   },
 
   {
     id: 3,
-    title: "Complete"
+    title: "Complete Assignment"
   }];
 
 function ShowList() {
