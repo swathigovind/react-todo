@@ -1,6 +1,6 @@
 import React from 'react';
 
-let AddTodoForm = () => {
+const AddTodoForm = () => {
 return( 
     <form>
       <label htmlFor="todoTitle">Title: </label>
