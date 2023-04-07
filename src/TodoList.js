@@ -1,4 +1,6 @@
 import React from "react";
+import TodoListItem  from "./TodoListItem";
+
 
 var todoList = [
   {
@@ -17,8 +19,8 @@ var todoList = [
 ];
 
 const RenderList = () => {
-  return todoList.map((i) => {
-    return <li key={i.id}>{i.title}</li>;
+  return todoList.map((todoListItem) => {
+    return (<TodoListItem key= {todoListItem.id} todoListItem={todoListItem}/>);
   });
 };
 
