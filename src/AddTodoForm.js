@@ -3,10 +3,9 @@ import React from 'react';
 
 
 
-const AddTodoForm = (props) => {
+const AddTodoForm = ({onAddTodo}) => {
 
   const [todoTitle , setTodoTitle  ] = React.useState('');
-
 
   const handleTitleChange = (event) => {
     const form = event.currentTarget;
@@ -15,7 +14,6 @@ const AddTodoForm = (props) => {
      setTodoTitle(newTodoTitle);
     }
  
-
   };
 
 
@@ -24,9 +22,9 @@ const AddTodoForm = (props) => {
     event.preventDefault();
     const form = event.currentTarget;
     if (form) {   
-      console.log(todoTitle);
-      props.onAddTodo(todoTitle);
-      document.getElementById("add-todo-form").reset();
+      console.log(todoTitle);  
+      onAddTodo({title: todoTitle, id:Date.now()});
+      setTodoTitle('');
     }
   };
 

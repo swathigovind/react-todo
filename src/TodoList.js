@@ -4,16 +4,18 @@ import TodoListItem  from "./TodoListItem";
 
 
 
-const RenderList = (props) => {
-  return props.todoList.map((todoListItem) => {
+const RenderList = ({todoList}) => {
+  return todoList.map((todoListItem) => {
     return (<TodoListItem key= {todoListItem.id} todoListItem={todoListItem}/>);
   });
 };
 
-const TodoList = (props) => {
+const TodoList = ( { todoList } ) => {
+
+ 
   return (
     <ul>
-      <RenderList todoList={props.todoList} />
+      <RenderList todoList={todoList} />
     </ul>
   );
 };
