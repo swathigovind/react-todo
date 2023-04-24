@@ -1,9 +1,9 @@
 import React from "react";
 
-const InputWithLabel = ({ id, label, name, value, onInputChange }) => {
+const InputWithLabel = ({ id, name, value, onInputChange, children  }) => {
   return (
     <>
-      <label htmlFor={id}>{label}: </label>
+      <label htmlFor={id}>{children} </label>
       <input
         name={name}
         id={id}
