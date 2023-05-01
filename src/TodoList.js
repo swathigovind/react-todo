@@ -4,18 +4,18 @@ import TodoListItem  from "./TodoListItem";
 
 
 
-const RenderList = ({todoList}) => {
+const RenderList = ({todoList, onRemoveTodo}) => {
   return todoList.map((todoListItem) => {
-    return (<TodoListItem key= {todoListItem.id} todoListItem={todoListItem}/>);
+    return (<TodoListItem key= {todoListItem.id} todoListItem={todoListItem} onRemoveTodo = {onRemoveTodo }/>);
   });
 };
 
-const TodoList = ( { todoList } ) => {
+const TodoList = ( { todoList, onRemoveTodo } ) => {
 
  
   return (
     <ul>
-      <RenderList todoList={todoList} />
+      <RenderList todoList={todoList} onRemoveTodo = {onRemoveTodo } />
     </ul>
   );
 };
