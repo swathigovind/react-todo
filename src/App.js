@@ -3,30 +3,43 @@ import TodoList from "./TodoList";
 import AddTodoForm from "./AddTodoForm";
 
 
-function App() {
 
-  const [todoList, setTodoList] = React.useState(
-    JSON.parse(localStorage.getItem("savedTodoList")) || [
-      { title: "React", id: Date.now() },
-    ]
-  );
+
+function App() {
+  const [todoList, setTodoList] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchData = () => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve({
+            data: {
+              todoList: todoList // Use the initial/default list state
+            }
+          });
+        }, 2000);
+      });
+    };
+
+    fetchData().then(result => {
+      setTodoList(result.data.todoList);
+    });
+  }, [todoList]);
 
   React.useEffect(() => {
     localStorage.setItem("savedTodoList", JSON.stringify(todoList));
   }, [todoList]);
-
 
   const addTodo = (newTodo) => {
     setTodoList([...todoList, newTodo]);
   };
 
   const removeTodo = (id) => {
-    const newToDoList = todoList.filter(
+    const newTodoList = todoList.filter(
       (item) => id !== item.id
     );
-    setTodoList (newToDoList);
+    setTodoList(newTodoList);
   };
-  
 
   return (
     <>
@@ -36,5 +49,6 @@ function App() {
     </>
   );
 }
+
 
 export default App;
