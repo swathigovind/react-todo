@@ -2,20 +2,46 @@ import React from "react";
 import TodoList from "./TodoList";
 import AddTodoForm from "./AddTodoForm";
 
-function App() {
-  const [isLoading, setIsLoading] = React.useState(true);
+const todoListReducer = (state, action) => {
+  switch (action.type) {
+    
+    case "TODOLIST_FETCH_INIT":
+      return {
+        ...state,
+        isLoading: true,
+      };
 
-  const todoListReducer = (state, action) => {
-    if (action.type === "SET_TODOLIST") {
-      return action.payload;
-    } else if (action.type === "REMOVE_TODOLIST") {
-      return state.filter((item) => action.payload !== item.id);
-    } else {
+    case "TODOLIST_FETCH_SUCCESS":
+      return {
+        ...state,
+        todoList: action.payload,
+        isLoading: false,
+      };
+
+    case "TODOLIST_FETCH_FAILURE":
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+      };
+
+    case "REMOVE_TODOLIST":
+      return {
+        ...state,
+        todoList: state.todoList.filter((item) => action.payload !== item.id),
+        isLoading: false,
+      };
+    default:
       throw new Error();
-    }
-  };
+  }
+};
 
-  const [todoList, dispatchTodoList] = React.useReducer(todoListReducer, []);
+function App() {
+  const [state, dispatch] = React.useReducer(todoListReducer, {
+    todoList: [],
+    isLoading: true,
+    isError: false,
+  });
 
   const getToDoList = () =>
     new Promise((resolve, reject) =>
@@ -33,31 +59,33 @@ function App() {
     );
 
   React.useEffect(() => {
-    getToDoList().then((result) => {
-      dispatchTodoList({
-        type: "SET_TODOLIST",
-        payload: result.data.todoList,
-      });
+    dispatch({ type: "TODOLIST_FETCH_INIT" });
 
-      setIsLoading(false);
-    });
-  }, [todoList]);
+    getToDoList()
+      .then((result) => {
+        dispatch({
+          type: "TODOLIST_FETCH_SUCCESS",
+          payload: result.data.todoList,
+        });
+      })
+      .catch(() => dispatch({ type: "TODOLIST_FETCH_FAILURE" }));
+  }, []);
 
   React.useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem("savedTodoList", JSON.stringify(todoList));
+    if (!state.isLoading) {
+      localStorage.setItem("savedTodoList", JSON.stringify(state.todoList));
     }
-  }, [todoList, isLoading]);
+  }, [state.todoList, state.isLoading]);
 
   const addTodo = (newTodo) => {
-    dispatchTodoList({
-      type: "SET_TODOLIST",
-      payload: [...todoList, newTodo],
+    dispatch({
+      type: "TODOLIST_FETCH_SUCCESS",
+      payload: [...state.todoList, newTodo],
     });
   };
 
   const removeTodo = (id) => {
-    dispatchTodoList({
+    dispatch({
       type: "REMOVE_TODOLIST",
       payload: id,
     });
@@ -67,10 +95,10 @@ function App() {
     <>
       <h1>Todo List</h1>
       <AddTodoForm onAddTodo={addTodo} />
-      {isLoading ? (
-        <p> Loading...</p>
+      {state.isLoading ? (
+        <p>Loading...</p>
       ) : (
-        <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
+        <TodoList todoList={state.todoList} onRemoveTodo={removeTodo} />
       )}
     </>
   );
