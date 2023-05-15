@@ -93,6 +93,47 @@ function App() {
     }
   };
 
+  const postTodo = async (todo) => {
+    try {
+      const airtableData = {
+        fields: {
+          title: todo.title,
+        },
+      };
+
+      const options = {
+        method: 'POST',
+        url: `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`,
+        },
+      };
+  
+      const response = await fetch(
+        options.url,
+        {
+          method: options.method,
+          headers: options.headers,
+          body: JSON.stringify(airtableData),
+        }
+      );
+  
+      if (!response.ok) {
+        const message = `Error has ocurred:
+                               ${response.status}`;
+        throw new Error(message);
+      }
+  
+      const dataResponse = await response.json();
+      
+      return dataResponse.fields;
+    } catch (error) {
+      console.log(error.message);
+      return null;
+    }
+  };
+
   React.useEffect(() => {
     dispatch({ type: "TODOLIST_FETCH_INIT" });
 
@@ -113,10 +154,14 @@ function App() {
   }, [state.todoList, state.isLoading]);
 
   const addTodo = (newTodo) => {
-    dispatch({
-      type: "TODOLIST_FETCH_SUCCESS",
-      payload: [...state.todoList, newTodo],
-    });
+    postTodo(newTodo)
+    .then((result) => {
+      dispatch({
+        type: "TODOLIST_FETCH_SUCCESS",
+        payload: [...state.todoList, result],
+      });
+    })
+    .catch(() => dispatch({ type: "TODOLIST_FETCH_FAILURE" }))
   };
 
   const removeTodo = (id) => {
