@@ -4,7 +4,6 @@ import AddTodoForm from "./AddTodoForm";
 
 const todoListReducer = (state, action) => {
   switch (action.type) {
-    
     case "TODOLIST_FETCH_INIT":
       return {
         ...state,
@@ -43,29 +42,106 @@ function App() {
     isError: false,
   });
 
-  const getToDoList = () =>
-    new Promise((resolve, reject) =>
-      setTimeout(
-        () =>
-          resolve({
-            data: {
-              todoList: JSON.parse(localStorage.getItem("savedTodoList")) || [
-                { title: "React", id: Date.now() },
-              ],
-            },
-          }),
-        2000
-      )
-    );
+  // const getToDoList = () =>
+  //   new Promise((resolve, reject) =>
+  //     setTimeout(
+  //       () =>
+  //         resolve({
+  //           data: {
+  //             todoList: JSON.parse(localStorage.getItem("savedTodoList")) || [
+  //               { title: "React", id: Date.now() },
+  //             ],
+  //           },
+  //         }),
+  //       2000
+  //     )
+  //   );
+
+  const loadTodos = async () => {
+    const options = {
+      method: "GET",
+      url: `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}`,
+      headers: {
+        Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`,
+      },
+    };
+
+    try {
+      const response = await fetch(options.url, {
+        headers: options.headers,
+      });
+
+      if (!response.ok) {
+        const message = `Error: ${response.status}`;
+        throw new Error(message);
+      }
+
+      const todosFromAPI = await response.json();
+
+      const todos = todosFromAPI.records.map((todo) => {
+        const newTodo = {
+          id: todo.id,
+          title: todo.fields.title,
+        };
+
+        return newTodo;
+      });
+
+      return todos;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const postTodo = async (todo) => {
+    try {
+      const airtableData = {
+        fields: {
+          title: todo.title,
+        },
+      };
+
+      const options = {
+        method: 'POST',
+        url: `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`,
+        },
+      };
+  
+      const response = await fetch(
+        options.url,
+        {
+          method: options.method,
+          headers: options.headers,
+          body: JSON.stringify(airtableData),
+        }
+      );
+  
+      if (!response.ok) {
+        const message = `Error has ocurred:
+                               ${response.status}`;
+        throw new Error(message);
+      }
+  
+      const dataResponse = await response.json();
+      
+      return dataResponse.fields;
+    } catch (error) {
+      console.log(error.message);
+      return null;
+    }
+  };
 
   React.useEffect(() => {
     dispatch({ type: "TODOLIST_FETCH_INIT" });
 
-    getToDoList()
+    loadTodos()
       .then((result) => {
         dispatch({
           type: "TODOLIST_FETCH_SUCCESS",
-          payload: result.data.todoList,
+          payload: result,
         });
       })
       .catch(() => dispatch({ type: "TODOLIST_FETCH_FAILURE" }));
@@ -78,10 +154,14 @@ function App() {
   }, [state.todoList, state.isLoading]);
 
   const addTodo = (newTodo) => {
-    dispatch({
-      type: "TODOLIST_FETCH_SUCCESS",
-      payload: [...state.todoList, newTodo],
-    });
+    postTodo(newTodo)
+    .then((result) => {
+      dispatch({
+        type: "TODOLIST_FETCH_SUCCESS",
+        payload: [...state.todoList, result],
+      });
+    })
+    .catch(() => dispatch({ type: "TODOLIST_FETCH_FAILURE" }))
   };
 
   const removeTodo = (id) => {
