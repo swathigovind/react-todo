@@ -1,7 +1,7 @@
 import React from "react";
 import TodoList from "./TodoList";
 import AddTodoForm from "./AddTodoForm";
-import axios from 'axios';
+import axios from "axios";
 
 const todoListReducer = (state, action) => {
   switch (action.type) {
@@ -68,7 +68,7 @@ function App() {
     };
 
     try {
-      const response = await  axios.get(options.url, {
+      const response = await axios.get(options.url, {
         headers: options.headers,
       });
 
@@ -76,8 +76,6 @@ function App() {
         const message = `Error: ${response.status}`;
         throw new Error(message);
       }
-
-      //const todosFromAPI = await response.json();
 
       const todos = response.data.records.map((todo) => {
         const newTodo = {
@@ -103,39 +101,23 @@ function App() {
       };
 
       const options = {
-        method: 'POST',
+        method: "POST",
         url: `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`,
         },
-        data: airtableData, // Include the data in the request body
+        data: airtableData,
       };
-  
-      const response = await axios( options);
 
-      // const response = await fetch(
-      //   options.url,
-      //   {
-      //     method: options.method,
-      //     headers: options.headers,
-      //     body: JSON.stringify(airtableData),
-      //   }
-      // );
-  
+      const response = await axios(options);
+
       if (response.status !== 200) {
         const message = `Error has ocurred:
                                ${response.status}`;
         throw new Error(message);
       }
-  
-      //const dataResponse = await response.json();
-      // let todoList = [];
-      // response.data.records.map((t) => {
-      //   let todoItem = { 'id': t.id, 'title': t.fields.title };
-      //   todoList.push(todoItem);
-      // })
-      
+
       return response.data.fields;
     } catch (error) {
       console.log(error.message);
@@ -164,13 +146,13 @@ function App() {
 
   const addTodo = (newTodo) => {
     postTodo(newTodo)
-    .then((result) => {
-      dispatch({
-        type: "TODOLIST_FETCH_SUCCESS",
-        payload: [...state.todoList, result],
-      });
-    })
-    .catch(() => dispatch({ type: "TODOLIST_FETCH_FAILURE" }))
+      .then((result) => {
+        dispatch({
+          type: "TODOLIST_FETCH_SUCCESS",
+          payload: [...state.todoList, result],
+        });
+      })
+      .catch(() => dispatch({ type: "TODOLIST_FETCH_FAILURE" }));
   };
 
   const removeTodo = (id) => {
