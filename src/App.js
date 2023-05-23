@@ -1,6 +1,7 @@
 import React from "react";
 import TodoList from "./TodoList";
 import AddTodoForm from "./AddTodoForm";
+import axios from 'axios';
 
 const todoListReducer = (state, action) => {
   switch (action.type) {
@@ -67,18 +68,18 @@ function App() {
     };
 
     try {
-      const response = await fetch(options.url, {
+      const response = await  axios.get(options.url, {
         headers: options.headers,
       });
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         const message = `Error: ${response.status}`;
         throw new Error(message);
       }
 
-      const todosFromAPI = await response.json();
+      //const todosFromAPI = await response.json();
 
-      const todos = todosFromAPI.records.map((todo) => {
+      const todos = response.data.records.map((todo) => {
         const newTodo = {
           id: todo.id,
           title: todo.fields.title,
@@ -108,26 +109,34 @@ function App() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`,
         },
+        data: airtableData, // Include the data in the request body
       };
   
-      const response = await fetch(
-        options.url,
-        {
-          method: options.method,
-          headers: options.headers,
-          body: JSON.stringify(airtableData),
-        }
-      );
+      const response = await axios( options);
+
+      // const response = await fetch(
+      //   options.url,
+      //   {
+      //     method: options.method,
+      //     headers: options.headers,
+      //     body: JSON.stringify(airtableData),
+      //   }
+      // );
   
-      if (!response.ok) {
+      if (response.status !== 200) {
         const message = `Error has ocurred:
                                ${response.status}`;
         throw new Error(message);
       }
   
-      const dataResponse = await response.json();
+      //const dataResponse = await response.json();
+      // let todoList = [];
+      // response.data.records.map((t) => {
+      //   let todoItem = { 'id': t.id, 'title': t.fields.title };
+      //   todoList.push(todoItem);
+      // })
       
-      return dataResponse.fields;
+      return response.data.fields;
     } catch (error) {
       console.log(error.message);
       return null;
