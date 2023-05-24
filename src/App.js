@@ -2,6 +2,7 @@ import React from "react";
 import TodoList from "./TodoList";
 import AddTodoForm from "./AddTodoForm";
 import axios from "axios";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const todoListReducer = (state, action) => {
   switch (action.type) {
@@ -42,21 +43,6 @@ function App() {
     isLoading: true,
     isError: false,
   });
-
-  // const getToDoList = () =>
-  //   new Promise((resolve, reject) =>
-  //     setTimeout(
-  //       () =>
-  //         resolve({
-  //           data: {
-  //             todoList: JSON.parse(localStorage.getItem("savedTodoList")) || [
-  //               { title: "React", id: Date.now() },
-  //             ],
-  //           },
-  //         }),
-  //       2000
-  //     )
-  //   );
 
   const loadTodos = async () => {
     const options = {
@@ -163,15 +149,33 @@ function App() {
   };
 
   return (
-    <>
-      <h1>Todo List</h1>
-      <AddTodoForm onAddTodo={addTodo} />
-      {state.isLoading ? (
-        <p>Loading...</p>
-      ) : (
-        <TodoList todoList={state.todoList} onRemoveTodo={removeTodo} />
-      )}
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <h1>Todo List</h1>
+              <AddTodoForm onAddTodo={addTodo} />
+              {state.isLoading ? (
+                <p>Loading...</p>
+              ) : (
+                <TodoList todoList={state.todoList} onRemoveTodo={removeTodo} />
+              )}
+            </>
+          }
+        />
+
+        <Route
+          path="/new"
+          element={
+            <>
+              <h1>New Todo List</h1>
+            </>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
