@@ -1,6 +1,8 @@
 import React from "react";
 import TodoList from "./TodoList";
 import AddTodoForm from "./AddTodoForm";
+import axios from "axios";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const todoListReducer = (state, action) => {
   switch (action.type) {
@@ -42,21 +44,6 @@ function App() {
     isError: false,
   });
 
-  // const getToDoList = () =>
-  //   new Promise((resolve, reject) =>
-  //     setTimeout(
-  //       () =>
-  //         resolve({
-  //           data: {
-  //             todoList: JSON.parse(localStorage.getItem("savedTodoList")) || [
-  //               { title: "React", id: Date.now() },
-  //             ],
-  //           },
-  //         }),
-  //       2000
-  //     )
-  //   );
-
   const loadTodos = async () => {
     const options = {
       method: "GET",
@@ -67,18 +54,16 @@ function App() {
     };
 
     try {
-      const response = await fetch(options.url, {
+      const response = await axios.get(options.url, {
         headers: options.headers,
       });
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         const message = `Error: ${response.status}`;
         throw new Error(message);
       }
 
-      const todosFromAPI = await response.json();
-
-      const todos = todosFromAPI.records.map((todo) => {
+      const todos = response.data.records.map((todo) => {
         const newTodo = {
           id: todo.id,
           title: todo.fields.title,
@@ -102,32 +87,24 @@ function App() {
       };
 
       const options = {
-        method: 'POST',
+        method: "POST",
         url: `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`,
         },
+        data: airtableData,
       };
-  
-      const response = await fetch(
-        options.url,
-        {
-          method: options.method,
-          headers: options.headers,
-          body: JSON.stringify(airtableData),
-        }
-      );
-  
-      if (!response.ok) {
+
+      const response = await axios(options);
+
+      if (response.status !== 200) {
         const message = `Error has ocurred:
                                ${response.status}`;
         throw new Error(message);
       }
-  
-      const dataResponse = await response.json();
-      
-      return dataResponse.fields;
+
+      return response.data.fields;
     } catch (error) {
       console.log(error.message);
       return null;
@@ -155,13 +132,13 @@ function App() {
 
   const addTodo = (newTodo) => {
     postTodo(newTodo)
-    .then((result) => {
-      dispatch({
-        type: "TODOLIST_FETCH_SUCCESS",
-        payload: [...state.todoList, result],
-      });
-    })
-    .catch(() => dispatch({ type: "TODOLIST_FETCH_FAILURE" }))
+      .then((result) => {
+        dispatch({
+          type: "TODOLIST_FETCH_SUCCESS",
+          payload: [...state.todoList, result],
+        });
+      })
+      .catch(() => dispatch({ type: "TODOLIST_FETCH_FAILURE" }));
   };
 
   const removeTodo = (id) => {
@@ -172,15 +149,33 @@ function App() {
   };
 
   return (
-    <>
-      <h1>Todo List</h1>
-      <AddTodoForm onAddTodo={addTodo} />
-      {state.isLoading ? (
-        <p>Loading...</p>
-      ) : (
-        <TodoList todoList={state.todoList} onRemoveTodo={removeTodo} />
-      )}
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <h1>Todo List</h1>
+              <AddTodoForm onAddTodo={addTodo} />
+              {state.isLoading ? (
+                <p>Loading...</p>
+              ) : (
+                <TodoList todoList={state.todoList} onRemoveTodo={removeTodo} />
+              )}
+            </>
+          }
+        />
+
+        <Route
+          path="/new"
+          element={
+            <>
+              <h1>New Todo List</h1>
+            </>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
