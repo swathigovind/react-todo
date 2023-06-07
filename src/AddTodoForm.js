@@ -1,68 +1,76 @@
-import React from "react";
+import React, { useState } from "react";
 import InputWithLabel from "./InputWithLabel";
-
-const inputReducer = (state, action) => {
-  switch (action.type) {
-    case "SET_INPUT":
-      return {
-        ...state,
-        todoTitle: action.payload,
-      };
-    case "RESET_INPUT":
-      return {
-        ...state,
-        todoTitle: action.payload,
-        inputKey: state.inputKey + 1,
-      };
-    default:
-      throw new Error();
-  }
-};
+import { FaPlus } from 'react-icons/fa';
+import style from "./TodoListItem.module.css";
 
 const AddTodoForm = ({ onAddTodo }) => {
-
-  const [state, dispatch] = React.useReducer(inputReducer, {
+  const [state, setState] = useState({
     todoTitle: "",
     inputKey: 0,
+    isAdding: false,
+    isFormVisible: false, // Track the form visibility
   });
 
   const handleTitleChange = (event) => {
     const form = event.currentTarget;
     if (form) {
       let newTodoTitle = form.value;
-      dispatch({
-        type: "SET_INPUT",
-        payload: newTodoTitle,
-      });
+      setState((prevState) => ({
+        ...prevState,
+        todoTitle: newTodoTitle,
+      }));
     }
   };
 
-  const handleAddTodo = (event) => {
+  const handleAddTodo = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     if (form) {
-      onAddTodo({ title: state.todoTitle, id: Date.now() });
-      dispatch({
-        type: "RESET_INPUT",
-        payload: "",
+      setState((prevState) => ({
+        ...prevState,
+        isAdding: true,
+      }));
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      onAddTodo({
+        title: state.todoTitle,
+        id: Date.now(),
       });
+
+      setState((prevState) => ({
+        ...prevState,
+        todoTitle: "",
+        inputKey: prevState.inputKey + 1,
+        isAdding: false,
+      }));
     }
   };
 
+
+
   return (
-    <form id="add-todo-form" onSubmit={handleAddTodo}>
-      <InputWithLabel
-        value={state.todoTitle}
-        id="todoTitle"
-        name="title"
-        isFocused
-        onInputChange={handleTitleChange}
-        key={state.inputKey}
-      >
-        <strong>Title:</strong>
-      </InputWithLabel>
-      <button type="submit"> Add </button>
-    </form>
+    <div className={`${style.FormContainer}`}>
+        <form id="add-todo-form" onSubmit={handleAddTodo} className={style.Form}>
+          <InputWithLabel
+            value={state.todoTitle}
+            id="todoTitle"
+            name="title"
+            isFocused
+            onInputChange={handleTitleChange}
+            key={state.inputKey}
+          >
+            <strong>Title:</strong>
+          </InputWithLabel>
+          <button
+            type="submit"
+            className={style.AddButton}
+          >
+            <FaPlus className={style.AddIcon} /> Add
+          </button>
+        </form>
+      
+    </div>
   );
 };
 

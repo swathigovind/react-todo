@@ -2,7 +2,9 @@ import React from "react";
 import TodoList from "./TodoList";
 import AddTodoForm from "./AddTodoForm";
 import axios from "axios";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import commonStyle from "./common.module.css";
+
 
 const todoListReducer = (state, action) => {
   switch (action.type) {
@@ -150,31 +152,51 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <h1>Todo List</h1>
-              <AddTodoForm onAddTodo={addTodo} />
-              {state.isLoading ? (
-                <p>Loading...</p>
-              ) : (
-                <TodoList todoList={state.todoList} onRemoveTodo={removeTodo} />
-              )}
-            </>
-          }
-        />
+      <div className={commonStyle.PageStyle}>
+        <h1 className={commonStyle.Title}>Todo List</h1>
 
-        <Route
-          path="/new"
-          element={
-            <>
-              <h1>New Todo List</h1>
-            </>
-          }
-        />
-      </Routes>
+        {/* Navigation tabs */}
+        <nav>
+          <ul>
+            <li>
+              <Link to="/" className={commonStyle.Tab} >
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link to="/new" className={commonStyle.Tab}>
+                New Todo
+              </Link>
+            </li>
+          </ul>
+        </nav>
+
+        <main className={commonStyle.Main}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  {/* AddTodoForm with onAddTodo prop */}
+                  <AddTodoForm onAddTodo={addTodo} />
+
+                  {/* TodoList */}
+                  {state.isLoading ? (
+                    <p className={commonStyle.Loading}>Loading...</p>
+                  ) : (
+                    <TodoList todoList={state.todoList} onRemoveTodo={removeTodo} />
+                  )}
+                </>
+              }
+            />
+            <Route path="/new" element={<h1>New Todo List</h1>} />
+          </Routes>
+        </main>
+
+        <footer className={commonStyle.Footer}>
+          <p className={commonStyle.FooterText}>© 2023 To Do List. All rights reserved.</p>
+        </footer>
+      </div>
     </BrowserRouter>
   );
 }

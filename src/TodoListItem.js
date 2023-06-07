@@ -1,34 +1,18 @@
 import React from "react";
-
+import style from "./TodoListItem.module.css";
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 
 const TodoListItem = ({ todoListItem, onRemoveTodo }) => {
-  const listItemStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: 'lightgray',
-    padding: '10px',
-    marginBottom: '5px',
-    borderRadius: '5px',
-  };
-
-  const titleStyle = {
-    flex: 3,
-  };
-
-  const buttonStyle = {
-    backgroundColor: 'red',
-    color: 'white',
-    padding: '5px 10px',
-    border: 'none',
-    borderRadius: '3px',
-    cursor: 'pointer',
-    marginLeft: '5px',
-  };
-
   return (
-    <li style={listItemStyle}>
-      <span style={titleStyle}>{todoListItem.title}</span>
-      <button type="button" style={buttonStyle} onClick={() => onRemoveTodo(todoListItem.id)}>Remove</button>
+    <li className={style.ListItem}>
+      <span className={style.IconContainer}>
+        <FaCheckCircle className={style.CheckIcon} />
+      </span>
+      <span className={style.TitleStyle}>{todoListItem.title}</span>
+      <button type="button" className={style.ButtonStyle} onClick={() => onRemoveTodo(todoListItem.id)}>
+        <FaTimesCircle className={style.DeleteIcon} />
+        <span className={style.DeleteText}>Remove</span>
+      </button>
     </li>
   );
 }
