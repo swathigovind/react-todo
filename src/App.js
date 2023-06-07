@@ -155,7 +155,7 @@ function App() {
       <div className={commonStyle.PageStyle}>
         <h1 className={commonStyle.Title}>Todo List</h1>
 
-        {/* Navigation tabs */}
+      
         <nav>
           <ul>
             <li>
@@ -177,10 +177,10 @@ function App() {
               path="/"
               element={
                 <>
-                  {/* AddTodoForm with onAddTodo prop */}
+              
                   <AddTodoForm onAddTodo={addTodo} />
 
-                  {/* TodoList */}
+           
                   {state.isLoading ? (
                     <p className={commonStyle.Loading}>Loading...</p>
                   ) : (

@@ -17,21 +17,22 @@
     flex: 1;
     margin-right: 10px;
     animation: slideInLeft 0.5s ease;
-  }
+}
 
-  @keyframes slideInLeft {
+@keyframes slideInLeft {
     from {
-      transform: translateX(-100%);
+        transform: translateX(-100%);
     }
+
     to {
-      transform: translateX(0);
+        transform: translateX(0);
     }
-  }
-  
+}
+
 
 .ListItem:hover {
     background-color: #f9f9f9;
-  }
+}
 
 .FormContainer {
     display: flex;
@@ -48,36 +49,37 @@
 
 @keyframes fadeIn {
     from {
-      opacity: 0;
+        opacity: 0;
     }
+
     to {
-      opacity: 1;
+        opacity: 1;
     }
-  }
-  
+}
+
 
 .IconContainer {
     display: flex;
     align-items: center;
     margin-right: 10px;
     animation: fadeIn 0.5s ease;
-    /* Add margin to separate the icons from the title */
+
 }
 
 .CheckIcon,
 .DeleteIcon {
     margin-right: 10px;
     font-size: 20px;
-    vertical-align: middle; /* Align the delete icon vertically */
+    vertical-align: middle;
 }
 
-  
-  .DeleteText {
+
+.DeleteText {
     margin-left: 5px;
     color: #000;
     transition: opacity 0.3s ease;
     line-height: 2;
-  }
+}
 
 
 
@@ -86,7 +88,7 @@
 .ButtonStyle:hover .DeleteText {
     opacity: 1;
     color: blue;
-  }
+}
 
 .ButtonStyle {
     background-color: red;
@@ -96,12 +98,12 @@
     border-radius: 3px;
     cursor: pointer;
     margin-left: 5px;
-    
+
     transition: color 0.3s ease;
 }
 
 
-  
+
 
 .AddButton {
     display: flex;
