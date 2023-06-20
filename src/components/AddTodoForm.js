@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import InputWithLabel from "./InputWithLabel";
 import { FaPlus } from 'react-icons/fa';
 import style from "./TodoListItem.module.css";
+import PropTypes from "prop-types";
 
 const AddTodoForm = ({ onAddTodo }) => {
   const [state, setState] = useState({
@@ -73,5 +74,10 @@ const AddTodoForm = ({ onAddTodo }) => {
     </div>
   );
 };
+
+AddTodoForm.propTypes = {
+  onAddTodo : PropTypes.func.isRequired,
+}
+
 
 export default AddTodoForm;

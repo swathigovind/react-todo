@@ -1,5 +1,5 @@
 import React from "react";
-
+import PropTypes from "prop-types";
 const InputWithLabel = ({
   id,
   name,
@@ -31,6 +31,17 @@ const InputWithLabel = ({
       ></input>
     </>
   );
+};
+
+
+InputWithLabel.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  onInputChange: PropTypes.func.isRequired,
+  isFocused: PropTypes.bool.isRequired,
+  children: PropTypes.node.isRequired,
+  key: PropTypes.string.isRequired
 };
 
 export default InputWithLabel;
