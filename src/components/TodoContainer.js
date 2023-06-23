@@ -68,9 +68,9 @@ function App() {
           const titleB = objectB.fields.title.toUpperCase();
 
           if (titleA < titleB) {
-            return -1;
-          } else if (titleA > titleB) {
             return 1;
+          } else if (titleA > titleB) {
+            return -1;
           } else {
             return 0;
           }
