@@ -3,8 +3,6 @@ import TodoList from "./TodoList";
 import AddTodoForm from "./AddTodoForm";
 import axios from "axios";
 
-
-
 const todoListReducer = (state, action) => {
   switch (action.type) {
     case "TODOLIST_FETCH_INIT":
@@ -64,14 +62,27 @@ function App() {
         throw new Error(message);
       }
 
-      const todos = response.data.records.map((todo) => {
-        const newTodo = {
-          id: todo.id,
-          title: todo.fields.title,
-        };
+      const todos = response.data.records
+        .sort((objectA, objectB) => {
+          const titleA = objectA.fields.title.toUpperCase();
+          const titleB = objectB.fields.title.toUpperCase();
 
-        return newTodo;
-      });
+          if (titleA < titleB) {
+            return -1;
+          } else if (titleA > titleB) {
+            return 1;
+          } else {
+            return 0;
+          }
+        })
+        .map((todo) => {
+          const newTodo = {
+            id: todo.id,
+            title: todo.fields.title,
+          };
+
+          return newTodo;
+        });
 
       return todos;
     } catch (error) {
