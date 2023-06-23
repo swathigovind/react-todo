@@ -1,6 +1,7 @@
 import React from "react";
 import style from "./TodoListItem.module.css";
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import PropTypes from "prop-types";
 
 const TodoListItem = ({ todoListItem, onRemoveTodo }) => {
   return (
@@ -16,5 +17,14 @@ const TodoListItem = ({ todoListItem, onRemoveTodo }) => {
     </li>
   );
 }
+
+TodoListItem.propTypes = {
+  todoListItem: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+  }),
+  onRemoveTodo: PropTypes.func.isRequired,
+};
+
 
 export default TodoListItem;
