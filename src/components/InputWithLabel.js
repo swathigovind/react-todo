@@ -7,8 +7,7 @@ const InputWithLabel = ({
   onInputChange,
   isFocused,
   children,
-  key
-
+  uniqueKey,
 }) => {
   const inputRef = React.useRef();
 
@@ -21,13 +20,13 @@ const InputWithLabel = ({
   return (
     <>
       <label htmlFor={id}>{children} </label>
-      <input
+      <input type="text" required
         ref={inputRef}
         name={name}
         id={id}
         value={value}
         onChange={onInputChange}
-        style={{ marginRight: "4px" }} key={key}
+        style={{ marginRight: "4px" }} key={uniqueKey}
       ></input>
     </>
   );
@@ -35,13 +34,12 @@ const InputWithLabel = ({
 
 
 InputWithLabel.propTypes = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string,
   name: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   onInputChange: PropTypes.func.isRequired,
   isFocused: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired,
-  key: PropTypes.string.isRequired
 };
 
 export default InputWithLabel;

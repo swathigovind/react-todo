@@ -2,6 +2,9 @@ import React from "react";
 import TodoList from "./TodoList";
 import AddTodoForm from "./AddTodoForm";
 import axios from "axios";
+import { FaSortUp, FaSortDown } from 'react-icons/fa';
+import style from "./TodoListItem.module.css";
+
 
 const todoListReducer = (state, action) => {
   switch (action.type) {
@@ -9,6 +12,12 @@ const todoListReducer = (state, action) => {
       return {
         ...state,
         isLoading: true,
+      };
+
+    case "CHANGE_SORT_ORDER":
+      return {
+        ...state,
+        sortOrder: action.payload,
       };
 
     case "TODOLIST_FETCH_SUCCESS":
@@ -41,12 +50,13 @@ function App() {
     todoList: [],
     isLoading: true,
     isError: false,
+    sortOrder: "asc"
   });
 
   const loadTodos = async () => {
     const options = {
       method: "GET",
-      url: `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}?sort[0][field]=title&sort[0][direction]=asc`,
+      url: `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}?sort[0][field]=title&sort[0][direction]=${state.sortOrder}`,
       headers: {
         Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`,
       },
@@ -63,18 +73,6 @@ function App() {
       }
 
       const todos = response.data.records
-        .sort((objectA, objectB) => {
-          const titleA = objectA.fields.title.toUpperCase();
-          const titleB = objectB.fields.title.toUpperCase();
-
-          if (titleA < titleB) {
-            return 1;
-          } else if (titleA > titleB) {
-            return -1;
-          } else {
-            return 0;
-          }
-        })
         .map((todo) => {
           const newTodo = {
             id: todo.id,
@@ -134,7 +132,7 @@ function App() {
         });
       })
       .catch(() => dispatch({ type: "TODOLIST_FETCH_FAILURE" }));
-  }, []);
+  }, [state.sortOrder]);
 
   React.useEffect(() => {
     if (!state.isLoading) {
@@ -160,9 +158,30 @@ function App() {
     });
   };
 
+
+  const toggleSortOrder = () => {
+    const newSortOrder = state.sortOrder === "asc" ? "desc" : "asc";
+    dispatch({ type: "CHANGE_SORT_ORDER", payload: newSortOrder });
+  };
+
   return (
     <>
       <AddTodoForm onAddTodo={addTodo} />
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+      <button onClick={toggleSortOrder} className={style.Togglebutton}>
+      {state.sortOrder === 'asc' ? (
+        <>
+          <FaSortUp className="icon" />
+          Ascending
+        </>
+      ) : (
+        <>
+          <FaSortDown className="icon" />
+          Descending
+        </>
+      )}
+    </button>
+    </div>
 
       {state.isLoading ? (
         <p>Loading...</p>
