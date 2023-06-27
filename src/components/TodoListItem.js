@@ -4,6 +4,9 @@ import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import PropTypes from "prop-types";
 
 const TodoListItem = ({ todoListItem, onRemoveTodo }) => {
+  if (!todoListItem) {
+    return null; 
+  }
   return (
     <li className={style.ListItem}>
       <span className={style.IconContainer}>

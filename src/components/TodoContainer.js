@@ -17,7 +17,8 @@ const todoListReducer = (state, action) => {
     case "CHANGE_SORT_ORDER":
       return {
         ...state,
-        sortOrder: action.payload,
+        sortOrder: action.sortOrder,
+        sortField: action.sortField,
       };
 
     case "TODOLIST_FETCH_SUCCESS":
@@ -50,13 +51,14 @@ function App() {
     todoList: [],
     isLoading: true,
     isError: false,
-    sortOrder: "asc"
+    sortOrder: "asc",
+    sortField: "title",
   });
 
   const loadTodos = async () => {
     const options = {
       method: "GET",
-      url: `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}?sort[0][field]=title&sort[0][direction]=${state.sortOrder}`,
+      url: `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}?sort[0][field]=${state.sortField}&sort[0][direction]=${state.sortOrder}`,
       headers: {
         Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`,
       },
@@ -76,7 +78,8 @@ function App() {
         .map((todo) => {
           const newTodo = {
             id: todo.id,
-            title: todo.fields.title,
+            title: todo.fields.title, 
+            createdOn: todo.fields.createdOn         
           };
 
           return newTodo;
@@ -93,6 +96,7 @@ function App() {
       const airtableData = {
         fields: {
           title: todo.title,
+          createdOn: new Date().toISOString().split("T")[0],
         },
       };
 
@@ -132,7 +136,7 @@ function App() {
         });
       })
       .catch(() => dispatch({ type: "TODOLIST_FETCH_FAILURE" }));
-  }, [state.sortOrder]);
+  }, [state.sortOrder,state.sortField]);
 
   React.useEffect(() => {
     if (!state.isLoading) {
@@ -159,25 +163,46 @@ function App() {
   };
 
 
-  const toggleSortOrder = () => {
-    const newSortOrder = state.sortOrder === "asc" ? "desc" : "asc";
-    dispatch({ type: "CHANGE_SORT_ORDER", payload: newSortOrder });
+  const toggleSortOrderByTitle = () => {
+    const sortOrder = state.sortOrder === "asc" ? "desc" : "asc";
+    const sortField = "title"; 
+    dispatch({ type: "CHANGE_SORT_ORDER",  sortOrder, sortField });
+  };
+
+  const toggleSortOrderByDate = () => {
+    const sortOrder = state.sortOrder === "asc" ? "desc" : "asc";
+    const sortField = "createdOn"; 
+    dispatch({ type: "CHANGE_SORT_ORDER", sortOrder, sortField });
   };
 
   return (
     <>
-      <AddTodoForm onAddTodo={addTodo} />
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-      <button onClick={toggleSortOrder} className={style.Togglebutton}>
+       <div style={{ marginBottom: "10px" }}><AddTodoForm onAddTodo={addTodo}  /></div>
+      <div style={{ display: "flex", justifyContent: "flex-end"}}>
+      <button onClick={toggleSortOrderByTitle} style={{ marginRight: "10px" }} className={style.Togglebutton}>
       {state.sortOrder === 'asc' ? (
         <>
           <FaSortUp className="icon" />
-          Ascending
+          Sort By Title
         </>
       ) : (
         <>
           <FaSortDown className="icon" />
-          Descending
+          Sort By Title
+        </>
+      )}
+    </button>
+
+    <button onClick={toggleSortOrderByDate} style={{ marginRight: "10px" }} className={style.Togglebutton}>
+      {state.sortOrder === 'asc' ? (
+        <>
+          <FaSortUp className="icon" />
+          Sort By Date
+        </>
+      ) : (
+        <>
+          <FaSortDown className="icon" />
+          Sort By Date
         </>
       )}
     </button>
