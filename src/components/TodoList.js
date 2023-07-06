@@ -3,10 +3,22 @@ import TodoListItem  from "./TodoListItem";
 import PropTypes from "prop-types";
 
 
+const generateUniqueKey = () => {
+  return Math.random().toString(36).substring(2) + Date.now().toString(36);
+};
 
-const RenderList = ({todoList, onRemoveTodo}) => {
+
+const RenderList = ({ todoList, onRemoveTodo }) => {
   return todoList.map((todoListItem) => {
-    return (<TodoListItem key= {todoListItem.id} todoListItem={todoListItem} onRemoveTodo = {onRemoveTodo }/>);
+    const key = generateUniqueKey(); 
+    return (
+    
+        <TodoListItem key= {key}
+          todoListItem={todoListItem}
+          onRemoveTodo={onRemoveTodo}
+        />
+   
+    );
   });
 };
 
@@ -23,7 +35,7 @@ const TodoList = ( { todoList, onRemoveTodo } ) => {
 RenderList.propTypes = {
   todoList: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string,
       title: PropTypes.string.isRequired,
     })
   ).isRequired,
@@ -34,7 +46,7 @@ RenderList.propTypes = {
 TodoList.propTypes = {
   todoList: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string,
       title: PropTypes.string.isRequired,
     })
   ).isRequired,

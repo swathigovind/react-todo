@@ -4,6 +4,7 @@ import { FaPlus } from 'react-icons/fa';
 import style from "./TodoListItem.module.css";
 import PropTypes from "prop-types";
 
+
 const AddTodoForm = ({ onAddTodo }) => {
   const [state, setState] = useState({
     todoTitle: "",
@@ -26,7 +27,7 @@ const AddTodoForm = ({ onAddTodo }) => {
   const handleAddTodo = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
-    if (form) {
+    if (form && form.checkValidity()) {
       setState((prevState) => ({
         ...prevState,
         isAdding: true,
@@ -45,6 +46,8 @@ const AddTodoForm = ({ onAddTodo }) => {
         inputKey: prevState.inputKey + 1,
         isAdding: false,
       }));
+    } else {  
+      form.reportValidity();
     }
   };
 
@@ -61,7 +64,7 @@ const AddTodoForm = ({ onAddTodo }) => {
             onInputChange={handleTitleChange}
             key={state.inputKey}
           >
-            <strong>Title:</strong>
+            <strong>*Title:</strong>
           </InputWithLabel>
           <button
             type="submit"

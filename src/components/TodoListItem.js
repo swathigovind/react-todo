@@ -4,6 +4,9 @@ import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import PropTypes from "prop-types";
 
 const TodoListItem = ({ todoListItem, onRemoveTodo }) => {
+  if (!todoListItem) {
+    return null; 
+  }
   return (
     <li className={style.ListItem}>
       <span className={style.IconContainer}>
@@ -20,7 +23,7 @@ const TodoListItem = ({ todoListItem, onRemoveTodo }) => {
 
 TodoListItem.propTypes = {
   todoListItem: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.string,
     title: PropTypes.string.isRequired,
   }),
   onRemoveTodo: PropTypes.func.isRequired,
