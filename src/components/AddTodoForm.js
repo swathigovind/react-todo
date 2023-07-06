@@ -37,6 +37,7 @@ const AddTodoForm = ({ onAddTodo }) => {
 
       onAddTodo({
         title: state.todoTitle,
+        status: 'Open',
         id: Date.now(),
       });
 
@@ -68,7 +69,7 @@ const AddTodoForm = ({ onAddTodo }) => {
           </InputWithLabel>
           <button
             type="submit"
-            className={style.AddButton}
+            className={style.Button}
           >
             <FaPlus className={style.AddIcon} /> Add
           </button>

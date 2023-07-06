@@ -1,17 +1,15 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, useLocation  } from "react-router-dom";
 import commonStyle from "./common.module.css";
 import TodoContainer from "./components/TodoContainer";
-
+import Home from "./components/Home";
 
 function App() {
 
   return (
     <BrowserRouter>
       <div className={commonStyle.PageStyle}>
-        <h1 className={commonStyle.Title}>Todo List</h1>
-
-      
+        <h1 className={commonStyle.Title}>Todo List</h1>    
         <nav>
           <ul>
             <li>
@@ -21,7 +19,7 @@ function App() {
             </li>
             <li>
               <Link to="/new" className={commonStyle.Tab}>
-                New Todo
+                Show Todo
               </Link>
             </li>
           </ul>
@@ -29,8 +27,8 @@ function App() {
 
         <main className={commonStyle.Main}>
           <Routes>
-          <Route path="/" element={<TodoContainer />} />
-            <Route path="/new" element={<h1>New Todo List</h1>} />
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/new" element={<TodoContainer />} />
           </Routes>
         </main>
 

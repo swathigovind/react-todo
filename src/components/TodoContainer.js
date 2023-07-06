@@ -46,7 +46,7 @@ const todoListReducer = (state, action) => {
   }
 };
 
-function App() {
+function TodoContainer() {
   const [state, dispatch] = React.useReducer(todoListReducer, {
     todoList: [],
     isLoading: true,
@@ -79,6 +79,7 @@ function App() {
           const newTodo = {
             id: todo.id,
             title: todo.fields.title, 
+            status: todo.fields.status,
             createdOn: todo.fields.createdOn         
           };
 
@@ -95,7 +96,9 @@ function App() {
     try {
       const airtableData = {
         fields: {
+         
           title: todo.title,
+          status: todo.status,
           createdOn: new Date().toISOString().split("T")[0],
         },
       };
@@ -124,6 +127,65 @@ function App() {
       return null;
     }
   };
+
+  const modifyTodo = async (updatedTodo) => {
+    try {
+      const airtableData = {
+        fields: {
+          title: updatedTodo.title,
+          status: updatedTodo.status,
+          createdOn: updatedTodo.createdOn,
+        },
+      };
+  
+      const options = {
+        method: "PATCH",
+        url: `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}/${updatedTodo.id}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`,
+        },
+        data: airtableData,
+      };
+  
+      const response = await axios(options);
+  
+      if (response.status !== 200) {
+        const message = `Error has occurred: ${response.status}`;
+        throw new Error(message);
+      }
+  
+      return response.data.fields;
+    } catch (error) {
+      console.log(error.message);
+      return null;
+    }
+  };
+
+  const deleteTodo = async (id) => {
+    try {
+      const options = {
+        method: "DELETE",
+        url: `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}/${id}`,
+        headers: {
+          Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`,
+        },
+      };
+      const response = await axios(options);
+
+      if (response.status !== 200) {
+        const message = `Error has ocurred:
+                               ${response.status}`;
+        throw new Error(message);
+      }
+
+      return response.data;
+    } catch (error) {
+      console.log(error.message);
+      return null;
+    }
+  };
+
 
   React.useEffect(() => {
     dispatch({ type: "TODOLIST_FETCH_INIT" });
@@ -155,11 +217,32 @@ function App() {
       .catch(() => dispatch({ type: "TODOLIST_FETCH_FAILURE" }));
   };
 
+
+
+
   const removeTodo = (id) => {
-    dispatch({
-      type: "REMOVE_TODOLIST",
-      payload: id,
-    });
+    deleteTodo(id)
+      .then((result) => {
+        dispatch({
+          type: "REMOVE_TODOLIST",
+          payload: id,
+
+        });
+      })
+      .catch(() => dispatch({ type: "TODOLIST_FETCH_FAILURE" }));
+  };
+
+  const updateTodo = (todoListItem) => {
+    modifyTodo(todoListItem)
+      .then((result) => {
+        dispatch({
+
+          type: "TODOLIST_FETCH_SUCCESS",
+          payload: [...state.todoList, result],
+
+        });
+      })
+      .catch(() => dispatch({ type: "TODOLIST_FETCH_FAILURE" }));
   };
 
 
@@ -169,17 +252,17 @@ function App() {
     dispatch({ type: "CHANGE_SORT_ORDER",  sortOrder, sortField });
   };
 
-  const toggleSortOrderByDate = () => {
+  const toggleSortOrderByStatus = () => {
     const sortOrder = state.sortOrder === "asc" ? "desc" : "asc";
-    const sortField = "createdOn"; 
+    const sortField = "status"; 
     dispatch({ type: "CHANGE_SORT_ORDER", sortOrder, sortField });
   };
 
   return (
     <>
-       <div style={{ marginBottom: "10px" }}><AddTodoForm onAddTodo={addTodo}  /></div>
+      <div style={{ marginBottom: "10px" }}><AddTodoForm onAddTodo={addTodo}  /></div>
       <div style={{ display: "flex", justifyContent: "flex-end"}}>
-      <button onClick={toggleSortOrderByTitle} style={{ marginRight: "10px" }} className={style.Togglebutton}>
+      <button  onClick={toggleSortOrderByTitle} style={{ marginRight: "10px" }} className={style.Togglebutton}>
       {state.sortOrder === 'asc' ? (
         <>
           <FaSortUp className="icon" />
@@ -193,16 +276,16 @@ function App() {
       )}
     </button>
 
-    <button onClick={toggleSortOrderByDate} style={{ marginRight: "10px" }} className={style.Togglebutton}>
+    <button   onClick={toggleSortOrderByStatus} style={{ marginRight: "10px" }} className={style.Togglebutton}>
       {state.sortOrder === 'asc' ? (
         <>
           <FaSortUp className="icon" />
-          Sort By Date
+          Sort By Status
         </>
       ) : (
         <>
           <FaSortDown className="icon" />
-          Sort By Date
+          Sort By Status
         </>
       )}
     </button>
@@ -211,10 +294,10 @@ function App() {
       {state.isLoading ? (
         <p>Loading...</p>
       ) : (
-        <TodoList todoList={state.todoList} onRemoveTodo={removeTodo} />
+        <TodoList todoList={state.todoList} onRemoveTodo={removeTodo}   onUpdateTodo = {updateTodo}/>
       )}
     </>
   );
 }
 
-export default App;
+export default TodoContainer;

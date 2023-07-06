@@ -1,9 +1,9 @@
 .ListItem {
-    color: blue;
+
+    color: black;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* Add this property to align items at the ends */
     background-color: lightgray;
     padding: 10px;
     margin-bottom: 5px;
@@ -12,6 +12,81 @@
     transition: background-color 0.3s ease;
 
 }
+ul {
+    list-style-type: none;
+  }
+
+  .PopupContextMenu {
+    position: absolute;
+    top: 30px; /* Adjust the distance from the top as needed */
+    right: 0;
+    width: 200px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+  }
+  
+  .MenuItem {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .MenuItem:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .FilterIcon {
+    cursor: pointer;
+  }
+
+  .Done {
+    background-color: green;
+  }
+  
+  .InProgress {
+    background-color: yellowgreen;
+  }
+  
+  .Default {
+    background-color: grey;
+  }
+  
+  .DropdownContainer {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .DropdownContainer select {
+    width: 150px;
+    padding: 3px 16px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #f1f1f1;
+    color: #333;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+  }
+  
+
+  
+  .DropdownContainer .DropdownIcon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  
+
+.Flipped {
+    transform: rotateY(180deg);
+  }
+
+  
 
 .TitleStyle {
     flex: 1;
@@ -68,13 +143,13 @@
 
 .CheckIcon,
 .DeleteIcon {
-    margin-right: 10px;
+    margin-right: 1px;
     font-size: 20px;
     vertical-align: middle;
 }
 
 
-.DeleteText {
+.Text {
     margin-left: 5px;
     color: #000;
     transition: opacity 0.3s ease;
@@ -85,27 +160,27 @@
 
 
 
-.ButtonStyle:hover .DeleteText {
+.ButtonStyle:hover .Text {
     opacity: 1;
     color: blue;
 }
 
 .ButtonStyle {
     background-color: red;
-    color: white;
-    padding: 5px 10px;
+    color: white; 
     border: none;
     border-radius: 3px;
     cursor: pointer;
     margin-left: 5px;
-
+    padding: 3px;
     transition: color 0.3s ease;
 }
 
 
 
 
-.AddButton {
+
+.Button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -117,7 +192,7 @@
     cursor: pointer;
 }
 
-.AddButton:hover {
+.Button:hover {
     background-color: #3367d6;
 }
 
@@ -129,7 +204,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f2f2f2;
+    background-color: #4285f4;
     border: none;
     border-radius: 4px;
     padding: 8px 16px;
@@ -137,13 +212,15 @@
     transition: background-color 0.3s;
   }
 
+  .Togglebutton:hover {
+    background-color: #3367d6;
+}
+
   .ToggleContainer {
     margin-bottom: 6px;
   }
   
-  .Togglebutton:hover {
-    background-color: #e0e0e0;
-  }
+
   
   .icon {
     margin-right: 8px;
