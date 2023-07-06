@@ -12,6 +12,12 @@
     transition: background-color 0.3s ease;
 
 }
+
+.InputContainer {
+  margin-bottom: 10px;
+}
+
+
 ul {
     list-style-type: none;
   }
@@ -46,6 +52,10 @@ ul {
   
   .InProgress {
     background-color: yellowgreen;
+  }
+
+  .Expired {
+    background-color: red;
   }
   
   .Default {
@@ -183,13 +193,15 @@ ul {
 .Button {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     background-color: #4285f4;
     color: #fff;
     padding: 10px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin-left: 10px;
+    margin-top: 20px;
 }
 
 .Button:hover {
@@ -241,6 +253,10 @@ ul {
 
     .ListItem {
         width: 600px;
+    }
+
+    .InputContainer {
+      margin-bottom: 0;
     }
 
 }

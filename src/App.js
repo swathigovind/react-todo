@@ -7,7 +7,7 @@ import Home from "./components/Home";
 function App() {
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/react-todo">
       <div className={commonStyle.PageStyle}>
         <h1 className={commonStyle.Title}>Todo List</h1>    
         <nav>

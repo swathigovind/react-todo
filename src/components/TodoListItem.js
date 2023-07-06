@@ -34,7 +34,10 @@ const TodoListItem = ({ todoListItem, onRemoveTodo, onUpdateTodo }) => {
   }
 
   const getStatusClassName = () => {
-    if (todoListItem.status === "Done") {
+    if (new Date(todoListItem.dueDate) < new Date() && todoListItem.status !== "Done"){
+      return style.Expired
+    }
+    else if (todoListItem.status === "Done") {
       return style.Done;
     } else if (todoListItem.status === "In Progress") {
       return style.InProgress;

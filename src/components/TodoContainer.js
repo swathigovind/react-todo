@@ -80,7 +80,8 @@ function TodoContainer() {
             id: todo.id,
             title: todo.fields.title, 
             status: todo.fields.status,
-            createdOn: todo.fields.createdOn         
+            createdOn: todo.fields.createdOn,
+            dueDate:todo.fields.dueDate        
           };
 
           return newTodo;
@@ -100,6 +101,7 @@ function TodoContainer() {
           title: todo.title,
           status: todo.status,
           createdOn: new Date().toISOString().split("T")[0],
+          dueDate:todo.dueDate !== "" ? todo.dueDate : undefined
         },
       };
 
@@ -135,6 +137,7 @@ function TodoContainer() {
           title: updatedTodo.title,
           status: updatedTodo.status,
           createdOn: updatedTodo.createdOn,
+          dueDate:updatedTodo.fields.dueDate 
         },
       };
   
