@@ -13,6 +13,12 @@ const AddTodoForm = ({ onAddTodo }) => {
     isFormVisible: false, // Track the form visibility
   });
 
+  const [dueDate, setDueDate] = useState('');
+
+  const handleDateChange = (event) => {
+    setDueDate(event.target.value);
+  };
+
   const handleTitleChange = (event) => {
     const form = event.currentTarget;
     if (form) {
@@ -37,7 +43,9 @@ const AddTodoForm = ({ onAddTodo }) => {
 
       onAddTodo({
         title: state.todoTitle,
+        status: 'Open',
         id: Date.now(),
+        dueDate: dueDate,
       });
 
       setState((prevState) => ({
@@ -54,27 +62,39 @@ const AddTodoForm = ({ onAddTodo }) => {
 
 
   return (
-    <div className={`${style.FormContainer}`}>
-        <form id="add-todo-form" onSubmit={handleAddTodo} className={style.Form}>
-          <InputWithLabel
-            value={state.todoTitle}
-            id="todoTitle"
-            name="title"
-            isFocused
-            onInputChange={handleTitleChange}
-            key={state.inputKey}
-          >
-            <strong>*Title:</strong>
-          </InputWithLabel>
-          <button
-            type="submit"
-            className={style.AddButton}
-          >
-            <FaPlus className={style.AddIcon} /> Add
-          </button>
-        </form>
-      
+<div className={`${style.FormContainer}`}>
+  <form id="add-todo-form" onSubmit={handleAddTodo} className={style.Form}>
+    <div className={style.InputContainer}>
+      <InputWithLabel
+        value={state.todoTitle}
+        id="todoTitle"
+        name="title"
+        isFocused
+        onInputChange={handleTitleChange}
+        key={state.inputKey}
+      >
+        <strong>*Title:</strong>
+      </InputWithLabel>
     </div>
+
+    <div className={style.InputContainer}>
+      <label htmlFor="dueDate">
+        <strong>Due Date:</strong>
+        <input
+          type="date"
+          id="dueDate"
+          value={dueDate}
+          onChange={handleDateChange}
+        />
+      </label>
+    </div>
+
+    <button type="submit"  className={`${style.Button}`}>
+      <FaPlus className={style.AddIcon} /> Add
+    </button>
+  </form>
+</div>
+
   );
 };
 

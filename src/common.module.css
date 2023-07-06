@@ -34,11 +34,28 @@
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    background-image: url('Bk.png');
     background-color: burlywood;
     font-family: 'Oswald', sans-serif;
     max-width: 800px;
     margin: 0 auto;
 }
+
+.PageStyle {
+    /* Global styles for .PageStyle class */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: burlywood;
+    background-image: url('Bk.png');
+    font-family: 'Oswald', sans-serif;
+    
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+ 
 
 
 .Footer {
