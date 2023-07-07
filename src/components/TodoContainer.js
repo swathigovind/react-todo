@@ -137,7 +137,7 @@ function TodoContainer() {
           title: updatedTodo.title,
           status: updatedTodo.status,
           createdOn: updatedTodo.createdOn,
-          dueDate:updatedTodo.fields.dueDate 
+          dueDate:updatedTodo.dueDate 
         },
       };
   
